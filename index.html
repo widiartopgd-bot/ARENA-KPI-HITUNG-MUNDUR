@@ -5,73 +5,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>ARENA KPI 2026 Countdown</title>
-
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-body {
+html, body {
   margin: 0;
-  background: transparent;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  overflow: hidden;
 }
 
 .countdown {
   width: 100%;
-  padding: 20px;
-  border-radius: 14px;
-  background: #07563F;
-  border: 4px solid #D6A52D;
-  text-align: center;
-  color: white;
-}
-
-.heading {
-  font-size: clamp(13px, 2.5vw, 21px);
-  font-weight: 800;
-  color: #FFD700;
-  margin-bottom: 16px;
-}
-
-.timer {
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-}
-
-.unit {
-  background: #FFF4D5;
-  border: 3px solid #D6A52D;
-  border-radius: 12px;
-  padding: 12px 3px;
+  align-items: center;
+  justify-items: center;
+  background: transparent;
 }
 
 .number {
   color: #07563F;
-  font-size: clamp(23px, 5vw, 48px);
+  font-family: Arial, sans-serif;
+  font-size: clamp(24px, 6vw, 64px);
   font-weight: 900;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
-}
-
-.label {
-  color: #07563F;
-  font-size: clamp(9px, 1.5vw, 13px);
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-.deadline {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #FFF4D5;
-  font-weight: bold;
-}
-
-.status {
-  margin-top: 8px;
-  font-size: 11px;
-  color: #FFD700;
-  font-weight: bold;
+  text-align: center;
+  background: transparent;
 }
 </style>
 </head>
@@ -79,62 +45,23 @@ body {
 <body>
 
 <div class="countdown">
-
-  <div class="heading">
-    MENUJU AKHIR ARENA KPI 2026
-  </div>
-
-  <div class="timer">
-
-    <div class="unit">
-      <div class="number" id="days">000</div>
-      <div class="label">HARI</div>
-    </div>
-
-    <div class="unit">
-      <div class="number" id="hours">00</div>
-      <div class="label">JAM</div>
-    </div>
-
-    <div class="unit">
-      <div class="number" id="minutes">00</div>
-      <div class="label">MENIT</div>
-    </div>
-
-    <div class="unit">
-      <div class="number" id="seconds">00</div>
-      <div class="label">DETIK</div>
-    </div>
-
-  </div>
-
-  <div class="deadline">
-    DEADLINE: 31 DESEMBER 2026 • 23:59:59 WIB
-  </div>
-
-  <div class="status" id="status">
-    WAKTU TERUS BERJALAN!
-  </div>
-
+  <div class="number" id="days">000</div>
+  <div class="number" id="hours">00</div>
+  <div class="number" id="minutes">00</div>
+  <div class="number" id="seconds">00</div>
 </div>
 
 <script>
-
-// DEADLINE TETAP WIB
-const deadline = new Date(
-  "2026-12-31T23:59:59+07:00"
-).getTime();
+const deadline =
+  new Date("2026-12-31T23:59:59+07:00").getTime();
 
 function updateCountdown() {
-
-  const now = Date.now();
-  const diff = Math.max(0, deadline - now);
-
+  const diff = Math.max(0, deadline - Date.now());
   const total = Math.floor(diff / 1000);
 
   const days = Math.floor(total / 86400);
-  const hours = Math.floor((total % 86400) / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
+  const hours = Math.floor(total % 86400 / 3600);
+  const minutes = Math.floor(total % 3600 / 60);
   const seconds = total % 60;
 
   document.getElementById("days").textContent =
@@ -148,17 +75,10 @@ function updateCountdown() {
 
   document.getElementById("seconds").textContent =
     String(seconds).padStart(2, "0");
-
-  document.getElementById("status").textContent =
-    diff > 0
-      ? "WAKTU TERUS BERJALAN!"
-      : "ARENA KPI 2026 TELAH BERAKHIR!";
-
 }
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
-
 </script>
 
 </body>
