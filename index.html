@@ -26,7 +26,7 @@ html, body {
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
   justify-items: center;
-  background: transparent;
+  background: transparent !important;
 }
 
 .number {
@@ -37,7 +37,8 @@ html, body {
   line-height: 1;
   font-variant-numeric: tabular-nums;
   text-align: center;
-  background: transparent;
+  background: transparent !important;
+  text-shadow: none;
 }
 </style>
 </head>
@@ -52,10 +53,12 @@ html, body {
 </div>
 
 <script>
-const deadline =
-  new Date("2026-12-31T23:59:59+07:00").getTime();
+const deadline = new Date(
+  "2026-12-31T23:59:59+07:00"
+).getTime();
 
 function updateCountdown() {
+
   const diff = Math.max(0, deadline - Date.now());
   const total = Math.floor(diff / 1000);
 
