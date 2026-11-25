@@ -31,14 +31,14 @@ html, body {
 
 .number {
   color: #07563F;
-  font-family: Arial, sans-serif;
-  font-size: clamp(24px, 6vw, 64px);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: clamp(25px, 6vw, 68px);
   font-weight: 900;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   text-align: center;
+  white-space: nowrap;
   background: transparent !important;
-  text-shadow: none;
 }
 </style>
 </head>
@@ -58,26 +58,20 @@ const deadline = new Date(
 ).getTime();
 
 function updateCountdown() {
-
   const diff = Math.max(0, deadline - Date.now());
   const total = Math.floor(diff / 1000);
 
-  const days = Math.floor(total / 86400);
-  const hours = Math.floor(total % 86400 / 3600);
-  const minutes = Math.floor(total % 3600 / 60);
-  const seconds = total % 60;
-
   document.getElementById("days").textContent =
-    String(days).padStart(3, "0");
+    String(Math.floor(total / 86400)).padStart(3, "0");
 
   document.getElementById("hours").textContent =
-    String(hours).padStart(2, "0");
+    String(Math.floor(total % 86400 / 3600)).padStart(2, "0");
 
   document.getElementById("minutes").textContent =
-    String(minutes).padStart(2, "0");
+    String(Math.floor(total % 3600 / 60)).padStart(2, "0");
 
   document.getElementById("seconds").textContent =
-    String(seconds).padStart(2, "0");
+    String(total % 60).padStart(2, "0");
 }
 
 updateCountdown();
