@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>E7LEVATE KPI Countdown</title>
+
+<style>
+:root {
+  --green: #006A4E;
+  --dark: #07352A;
+  --gold: #FFD700;
+  --white: #FFFFFF;
+  --muted: #C4D8D0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, sans-serif;
+  color: var(--white);
+}
+
+.container {
+  width: 100%;
+  min-height: 180px;
+  padding: 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #07352A, #006A4E);
+  text-align: center;
+  overflow: hidden;
+}
+
+.brand {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+
+.heading {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 10px 0 17px;
+}
+
+.timer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.unit {
+  background: rgba(0,0,0,0.20);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 9px;
+  padding: 12px 3px;
+}
+
+.number {
+  color: var(--gold);
+  font-size: clamp(25px, 5vw, 44px);
+  line-height: 1.1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.caption {
+  margin-top: 6px;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+.footer {
+  margin-top: 17px;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+.deadline {
+  color: var(--white);
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.status {
+  margin-top: 8px;
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="brand">
+    E7LEVATE • KPI STUDIO
+  </div>
+
+  <div class="heading">
+    MONTHLY PERFORMANCE DEADLINE
+  </div>
+
+  <div class="timer">
+
+    <div class="unit">
+      <div class="number" id="days">00</div>
+      <div class="caption">HARI</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="hours">00</div>
+      <div class="caption">JAM</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="minutes">00</div>
+      <div class="caption">MENIT</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="seconds">00</div>
+      <div class="caption">DETIK</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    BATAS AKHIR PENGISIAN KPI
+  </div>
+
+  <div class="deadline" id="deadline">
+    Memuat deadline...
+  </div>
+
+  <div class="status" id="status">
+    WAKTU TERSISA
+  </div>
+
+</div>
+
+<script>
+const TIME_ZONE = "Asia/Jakarta";
+const ONE_DAY = 86400000;
+const WIB_OFFSET = 7 * 60 * 60 * 1000;
+
+function jakartaDateParts(timestamp) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date(timestamp));
+
+  const result = {};
+
+  parts.forEach(part => {
+    if (part.type !== "literal") {
+      result[part.type] = Number(part.value);
+    }
+  });
+
+  return result;
+}
+
+function getMonthlyDeadline() {
+  const now = Date.now();
+  const date = jakartaDateParts(now);
+
+  // Awal bulan berikutnya dalam kalender Jakarta
+  const nextMonthUTC = Date.UTC(
+    date.year,
+    date.month,
+    1
+  );
+
+  // Konversi ke pukul 00:00:00 WIB
+  // Mundur satu detik menjadi 23:59:59 WIB
+  return nextMonthUTC - WIB_OFFSET - 1000;
+}
+
+function formatDeadline(timestamp) {
+  return new Intl.DateTimeFormat("id-ID", {
+    timeZone: TIME_ZONE,
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  }).format(new Date(timestamp)) + " • 23:59:59 WIB";
+}
+
+function setNumber(id, value) {
+  document.getElementById(id).textContent =
+    String(value).padStart(2, "0");
+}
+
+function updateCountdown() {
+  const now = Date.now();
+  const deadline = getMonthlyDeadline();
+  const remaining = deadline - now;
+
+  document.getElementById("deadline").textContent =
+    formatDeadline(deadline);
+
+  if (remaining <= 0) {
+    setNumber("days", 0);
+    setNumber("hours", 0);
+    setNumber("minutes", 0);
+    setNumber("seconds", 0);
+
+    document.getElementById("status").textContent =
+      "DEADLINE TELAH BERAKHIR";
+
+    return;
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  setNumber("days", days);
+  setNumber("hours", hours);
+  setNumber("minutes", minutes);
+  setNumber("seconds", seconds);
+
+  document.getElementById("status").textContent =
+    "WAKTU TERSISA";
+}
+
+// Jalankan langsung dan perbarui setiap detik
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+</script>
+
+</body>
+</html>
