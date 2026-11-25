@@ -15,8 +15,28 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: transparent !important;
   overflow: hidden;
+
+  /* Background mengikuti kertas poster */
+  background-color: #F7E9C9 !important;
+  background-image:
+    radial-gradient(
+      ellipse at 20% 20%,
+      rgba(255,255,255,0.35),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse at 80% 80%,
+      rgba(224,190,125,0.13),
+      transparent 65%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(160,125,65,0.025) 0px,
+      rgba(160,125,65,0.025) 1px,
+      transparent 1px,
+      transparent 5px
+    );
 }
 
 .countdown {
@@ -34,7 +54,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: transparent;
   gap: 5px;
 }
 
@@ -46,6 +65,13 @@ html, body {
   line-height: 1;
   font-variant-numeric: tabular-nums;
   text-align: center;
+  white-space: nowrap;
+
+  -webkit-text-stroke: 1px #FFD700;
+
+  text-shadow:
+    0 2px 0 #D9A52E,
+    0 3px 3px rgba(65,47,15,0.22);
 }
 
 .label {
@@ -55,6 +81,11 @@ html, body {
   font-weight: 900;
   letter-spacing: 1px;
   text-align: center;
+
+  -webkit-text-stroke: 0.4px #FFD700;
+
+  text-shadow:
+    0 1px 1px rgba(65,47,15,0.2);
 }
 </style>
 </head>
@@ -91,7 +122,6 @@ const deadline = new Date(
 ).getTime();
 
 function updateCountdown() {
-
   const diff = Math.max(0, deadline - Date.now());
   const total = Math.floor(diff / 1000);
 
