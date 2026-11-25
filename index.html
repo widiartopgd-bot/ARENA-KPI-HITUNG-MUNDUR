@@ -26,7 +26,16 @@ html, body {
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
   justify-items: center;
-  background: transparent !important;
+  background: transparent;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  gap: 5px;
 }
 
 .number {
@@ -37,8 +46,15 @@ html, body {
   line-height: 1;
   font-variant-numeric: tabular-nums;
   text-align: center;
-  white-space: nowrap;
-  background: transparent !important;
+}
+
+.label {
+  color: #07563F;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 1.7vw, 17px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-align: center;
 }
 </style>
 </head>
@@ -46,10 +62,27 @@ html, body {
 <body>
 
 <div class="countdown">
-  <div class="number" id="days">000</div>
-  <div class="number" id="hours">00</div>
-  <div class="number" id="minutes">00</div>
-  <div class="number" id="seconds">00</div>
+
+  <div class="item">
+    <div class="number" id="days">000</div>
+    <div class="label">HARI</div>
+  </div>
+
+  <div class="item">
+    <div class="number" id="hours">00</div>
+    <div class="label">JAM</div>
+  </div>
+
+  <div class="item">
+    <div class="number" id="minutes">00</div>
+    <div class="label">MENIT</div>
+  </div>
+
+  <div class="item">
+    <div class="number" id="seconds">00</div>
+    <div class="label">DETIK</div>
+  </div>
+
 </div>
 
 <script>
@@ -58,6 +91,7 @@ const deadline = new Date(
 ).getTime();
 
 function updateCountdown() {
+
   const diff = Math.max(0, deadline - Date.now());
   const total = Math.floor(diff / 1000);
 
